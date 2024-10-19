@@ -6,39 +6,42 @@ def get_data():
     job_dict = {}
     
     main_response = requests.get(base_url)
-    soup = BeautifulSoup(main_response.text, "html.parser")
+    main_soup = BeautifulSoup(main_response.text, "html.parser")
 
     for i in range(20):
         # Extract link
-        div_index = soup.find('div', attrs={'data-index': i})
+        div_index = main_soup.find('div', attrs={'data-index': i})
         a_tag = div_index.find('a')
 
         if a_tag and 'href' in a_tag.attrs:
             offer_response = requests.get(f"https://justjoin.it{a_tag['href']}")
-            soup = BeautifulSoup(offer_response.text, "html.parser")
+            offer_soup = BeautifulSoup(offer_response.text, "html.parser")
 
             # Extract title
-            title_div = soup.find('div', attrs={'class': 'css-s52zl1'})
+            title_div = offer_soup.find('div', attrs={'class': 'css-s52zl1'})
             h1_title_tag = title_div.find('h1')
 
             # Extract salary
             try:
-                salary = soup.find("span", attrs={'class': 'css-1pavfqb'})
+                salary = offer_soup.find("span", attrs={'class': 'css-1pavfqb'})
                 salary_text = salary.text
             except:
                 salary_text = "Undisclosed Salary"
 
             # Extract company
-            company = soup.find("h2", attrs={'class': 'css-77dijd'})
+            company = offer_soup.find("h2", attrs={'class': 'css-77dijd'})
 
             # Extract location
-            location = soup.find("span", attrs={'class': 'css-1o4wo1x'})
+            location = offer_soup.find("span", attrs={'class': 'css-1o4wo1x'})
 
             # Extract type of work (full-time, part-time etc.), job level (junior, mid, senior), operating mode (hybrid, remote etc.)
-            other = [i.text for i in soup.find_all("div", attrs={'class': 'css-snbmy4'})]
+            other = [i.text for i in offer_soup.find_all("div", attrs={'class': 'css-snbmy4'})]
+
+            # Extract skills
+            skills =  [i.text for i in offer_soup.find_all("h4", attrs={'class': 'css-b849nv'})]
 
             # Extract description
-            desc = soup.find("div", attrs={'class': 'css-r1n8l8'})
+            # desc = offer_soup.find("div", attrs={'class': 'css-r1n8l8'})
 
             # Add all values to dict
             job_dict[i] = {
@@ -50,7 +53,8 @@ def get_data():
                 "type_of_work": other[0],
                 "job_level": other[1],
                 "operating_mode": other[3],
-                "desc": desc
+                # "desc": desc,
+                "skills": skills
                 }
             
             offer_response.close()
