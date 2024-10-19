@@ -4,18 +4,18 @@ import requests
 def get_data():
     base_url = "https://justjoin.it/"
     job_dict = {}
+    
+    main_response = requests.get(base_url)
+    soup = BeautifulSoup(main_response.text, "html.parser")
 
     for i in range(20):
-        response = requests.get(base_url)
-        soup = BeautifulSoup(response.text, "html.parser")
-
         # Extract link
         div_index = soup.find('div', attrs={'data-index': i})
         a_tag = div_index.find('a')
 
         if a_tag and 'href' in a_tag.attrs:
-            response = requests.get(f"https://justjoin.it{a_tag['href']}")
-            soup = BeautifulSoup(response.text, "html.parser")
+            offer_response = requests.get(f"https://justjoin.it{a_tag['href']}")
+            soup = BeautifulSoup(offer_response.text, "html.parser")
 
             # Extract title
             title_div = soup.find('div', attrs={'class': 'css-s52zl1'})
@@ -52,6 +52,10 @@ def get_data():
                 "operating_mode": other[3],
                 "desc": desc
                 }
+            
+            offer_response.close()
+
+    main_response.close()
 
     return job_dict
 
