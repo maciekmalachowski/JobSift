@@ -1,9 +1,9 @@
 from flask import request, jsonify
-from config import app, db
+from config import app
 from sqlalchemy import or_, and_
 from models import JobOffer
 
-@app.route('/jobs', methods=['GET'])
+@app.route('/', methods=['GET'])
 def get_jobs():
     job_offers = JobOffer.query.all()
     job_list = [job.to_json() for job in job_offers]
@@ -38,7 +38,7 @@ def search_jobs():
         'title': job.title,
         'company': job.company,
         'job_level': job.job_level,
-        'location': job.location,
+        'location': job.location.split(', '),
     } for job in jobs]
 
     return jsonify(job_list)

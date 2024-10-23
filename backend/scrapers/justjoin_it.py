@@ -41,10 +41,10 @@ def get_data():
             skills =  [i.text for i in offer_soup.find_all("h4", attrs={'class': 'css-b849nv'})]
 
             # Extract description
-            desc = offer_soup.find("div", attrs={'class': 'css-r1n8l8'})
+            # desc = offer_soup.find("div", attrs={'class': 'css-r1n8l8'})
 
             # Add all values to dict
-            job_dict[i] = {
+            job_dict[f"justjoin_it_{i}"] = {
                 "link": f"https://justjoin.it{a_tag['href']}",
                 "title": h1_title_tag.text,
                 "salary": salary_text,
@@ -57,12 +57,11 @@ def get_data():
                 "skills": skills
                 }
             
-            print(job_dict)
-    #         offer_response.close()
+            offer_response.close()
 
-    # main_response.close()
+    main_response.close()
 
-    # return job_dict
+    return job_dict
 
 if __name__ == "__main__":
     get_data()

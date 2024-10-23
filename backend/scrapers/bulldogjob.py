@@ -6,8 +6,9 @@ def get_data():
     base_url = "https://bulldogjob.pl/companies/jobs/s/page,{}"
     job_dict = {}
     kw_model = KeyBERT()
+    index = 0
 
-    for i in range(1, 4):
+    for i in range(1, 2):
         url = base_url.format(i)
         main_response = requests.get(url)
         main_soup = BeautifulSoup(main_response.text, "html.parser")
@@ -70,7 +71,8 @@ def get_data():
                 # desc = offer_soup.find("section", attrs={'id': '1-panel'})
 
                 # Add all values to dict
-                job_dict[i] = {
+                
+                job_dict[f"bulldog_jobs_{index}"] = {
                     "link": link['href'],
                     "title": title.text,
                     "salary": salary_text,
@@ -82,6 +84,8 @@ def get_data():
                     # "desc": desc,
                     "skills": skills
                     }
+                
+                index += 1                
 
             offer_response.close()
 

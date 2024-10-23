@@ -1,6 +1,20 @@
 from config import app, db
 from models import JobOffer
 from scrapers import justjoin_it, bulldogjob
+import unicodedata
+
+def normalize_string(input_string):
+    # Mapping of Polish characters to their non-diacritic equivalents
+    replacements = {
+        'ą': 'a', 'ć': 'c', 'ę': 'e', 'ł': 'l', 'ń': 'n', 
+        'ó': 'o', 'ś': 's', 'ź': 'z', 'ż': 'z',
+        'Ą': 'A', 'Ć': 'C', 'Ę': 'E', 'Ł': 'L', 'Ń': 'N', 
+        'Ó': 'O', 'Ś': 'S', 'Ź': 'Z', 'Ż': 'Z'
+    }
+    # Replace each character in the input string if it is in the replacements dictionary
+    normalized_string = ''.join(replacements.get(c, c) for c in input_string)
+    return normalized_string
+
 
 def insert_jobs():
     jobs = {}
@@ -13,11 +27,11 @@ def insert_jobs():
             title = values['title'],
             salary = values['salary'],
             company = values['company'],
-            location = ','.join(values['location']),
+            location = ', '.join([normalize_string(location) for location in values['location']]),
             type_of_work = values['type_of_work'],
             job_level = values['job_level'],
             operating_mode = values['operating_mode'],
-            skills = ','.join(values['skills'])
+            skills = ', '.join(values['skills'])
         )
         db.session.add(job_offer)
 
