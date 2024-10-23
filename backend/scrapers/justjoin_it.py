@@ -32,7 +32,7 @@ def get_data():
             company = offer_soup.find("h2", attrs={'class': 'css-77dijd'})
 
             # Extract location
-            location = offer_soup.find("span", attrs={'class': 'css-1o4wo1x'})
+            location = [offer_soup.find("span", attrs={'class': 'css-1o4wo1x'}).text]
 
             # Extract type of work (full-time, part-time etc.), job level (junior, mid, senior), operating mode (hybrid, remote etc.)
             other = [i.text for i in offer_soup.find_all("div", attrs={'class': 'css-snbmy4'})]
@@ -41,7 +41,7 @@ def get_data():
             skills =  [i.text for i in offer_soup.find_all("h4", attrs={'class': 'css-b849nv'})]
 
             # Extract description
-            # desc = offer_soup.find("div", attrs={'class': 'css-r1n8l8'})
+            desc = offer_soup.find("div", attrs={'class': 'css-r1n8l8'})
 
             # Add all values to dict
             job_dict[i] = {
@@ -49,7 +49,7 @@ def get_data():
                 "title": h1_title_tag.text,
                 "salary": salary_text,
                 "company": company.text,
-                "location": location.text,
+                "location": location,
                 "type_of_work": other[0],
                 "job_level": other[1],
                 "operating_mode": other[3],
@@ -57,11 +57,12 @@ def get_data():
                 "skills": skills
                 }
             
-            offer_response.close()
+            print(job_dict)
+    #         offer_response.close()
 
-    main_response.close()
+    # main_response.close()
 
-    return job_dict
+    # return job_dict
 
 if __name__ == "__main__":
     get_data()

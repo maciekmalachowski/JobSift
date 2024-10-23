@@ -34,32 +34,37 @@ def get_data():
                 company = offer_soup.find("h2", class_ = ['text-c20', 'leading-6', 'font-medium', 'text-gray-500'])
 
                 # Extract location
-                parent_location = offer_soup.find('p', string='Location')
+                parent_location = offer_soup.find('p', string=lambda x: x in ['Location', 'Lokalizacja'])
                 if parent_location:
                     cities = parent_location.find_parent('div').find_all('p', class_ = ['text-md', 'xl:text-c22', 'leading-6'])
                     locations = [city.text for city in cities]
+                else:
+                    locations = ["Only remote"]
 
                 # Extract type of work (full-time, part-time etc.)
-                parent_type = offer_soup.find('p', string='Employment Type')
+                parent_type = offer_soup.find('p', string=lambda x: x in ['Employment Type', 'Typ współpracy'])
                 if parent_type:
                     type_of_work = parent_type.find_parent('div').find_all('p', class_ = ['text-md', 'xl:text-c22', 'leading-6'])
 
                 # Extract job level (junior, mid, senior)
-                parent_type = offer_soup.find('p', string='Experience')
+                parent_type = offer_soup.find('p', string=lambda x: x in ['Experience', 'Doświadczenie'])
                 if parent_type:
                     job_level = parent_type.find_parent('div').find_all('p', class_ = ['text-md', 'xl:text-c22', 'leading-6'])
 
-                # Extract operating mode (hybrid, remote etc.)
-                parent_type = offer_soup.find('p', string='Remote work')
+                # # Extract operating mode (hybrid, remote etc.)
+                parent_type = offer_soup.find('p', string=lambda x: x in ['Remote work', 'Praca zdalna'])
                 if parent_type:
                     operating_mode = parent_type.find_parent('div').find_all('p', class_ = ['text-md', 'xl:text-c22', 'leading-6'])
 
-                # Extract skills
+                # # Extract skills
                 skill_desc =  offer_soup.find("section", attrs={'id': '3-panel'})
                 ul = skill_desc.find("ul")
-
-                keywords = kw_model.extract_keywords(ul.text)
-                skills = [skill for skill, _ in keywords]
+                
+                if ul:
+                    keywords = kw_model.extract_keywords(ul.text)
+                    skills = [skill for skill, _ in keywords]
+                else:
+                    skills = ["Hard to tell"]
 
                 # Extract description
                 # desc = offer_soup.find("section", attrs={'id': '1-panel'})

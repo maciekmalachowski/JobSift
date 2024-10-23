@@ -21,11 +21,11 @@ class JobOffer(db.Model):
             "title": self.title,
             "company": self.company,
             "salary": self.salary,
-            "location": self.location,
+            "location": self.location.split(','),
             "type_of_work": self.type_of_work,
             "job_level": self.job_level,
             "operating_mode": self.operating_mode,
             # "desc": self.desc,
-            "skills": self.skills,
+            "skills": self.skills.split(','),
             "link": self.link
         }
