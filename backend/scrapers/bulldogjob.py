@@ -30,7 +30,6 @@ def get_data():
                 elif salary:
                     salary_text = salary.text
 
-                print(salary_text)
                 # Extract company
                 company = offer_soup.find("h2", class_ = ['text-c20', 'leading-6', 'font-medium', 'text-gray-500'])
 
@@ -78,12 +77,12 @@ def get_data():
                     # "desc": desc,
                     "skills": skills
                     }
-                print(job_dict)
+
             offer_response.close()
 
     main_response.close()
 
-    # return job_dict
+    return job_dict
 
 if __name__ == "__main__":
     get_data()
